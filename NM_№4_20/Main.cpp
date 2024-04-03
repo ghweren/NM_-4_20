@@ -10,18 +10,19 @@
 using namespace std;
 
 void drawXY();
-void drawGraph(vector<vector<double>> table, vector<vector<double>> result, float sx, float sy, float dx, float dy);
+void drawGraph(vector<vector<double>> table, vector<vector<double>> result , double rangeX, double rangeY, float sx, float sy, float dx, float dy);
 int Visualisation(vector<vector<double>> table, vector<vector<double>> result);
+vector<vector<double>> normalize(vector<vector<double>> points);
 double function(double x);
 void print_table(vector<vector<double>> table)
 {
 	cout << '\n';
-	for (int i = 0; i < table.size() - 1; i++)
+	for (int i = 0; i < table.size(); i++)
 	{
 		cout << table[i][0] << ' ';
 	}
-	cout << '\n'<<1;
-	for (int i = 0; i < table.size() - 1; i++)
+	cout << '\n';
+	for (int i = 0; i < table.size(); i++)
 	{
 		cout << table[i][1] << ' ';
 	}
@@ -49,8 +50,35 @@ int main() {
 		}
 
 		vector<vector<double>> result = (new LeastSquareMethod)->Calculation(table, 1);
+
+		table = normalize(table);
+		result = normalize(result);
+
+		print_table(table);
 	
 	return Visualisation(table,result);
+}
+
+vector<vector<double>> normalize(vector<vector<double>> points) {
+	
+	double maxX = abs(points[0][0]), maxY = abs(points[0][1]);
+	for (int i = 0; i < points.size(); i++)
+	{
+		if (abs(points[i][0])>maxX)
+			maxX = abs(points[i][0]);
+		if (abs(points[i][1])>maxY)
+			maxY = abs(points[i][1]);
+	}
+	double scaleX = 1 / maxX;
+	double scaleY = 1 / maxY;
+
+	for (int i = 0; i < points.size(); i++)
+	{
+		points[i][0] *= scaleX;
+		points[i][1] *= scaleY;
+	}
+
+	return points;
 }
 
 void drawXY()
@@ -64,26 +92,28 @@ void drawXY()
 	glEnd();
 }
 
-void drawGraph(vector<vector<double>> table, vector<vector<double>> result, float sx, float sy, float dx, float dy) {
+void drawGraph(vector<vector<double>> table, vector<vector<double>> result) {
+
+	
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glPushMatrix();
-	glScalef(sx, sy, 1);
-	glTranslatef(-dx, -dy, 0);
+	//glPushMatrix();
+	//glScalef(sx, sy, 1);
+	//glTranslatef(-dx, -dy, 0);
 	glPointSize(10);
 	glBegin(GL_POINTS);
 	for (int i = 0; i < table.size(); i++)
-		glVertex2d(table[i][0], table[i][1]);
+		glVertex2f(table[i][0], table[i][1]);
 	glEnd();
 	glBegin(GL_LINE_STRIP);
 	for (int i = 0; i < result.size(); i++)
-		glVertex2d(result[i][0], result[i][1]);
+		glVertex2f(result[i][0], result[i][1]);
 	glEnd();
-	glPopMatrix();
+	//glPopMatrix();
 }
 
 double function(double x)
 {
-	return sin(x)+x;
+	return sin(x);
 }
 
 int Visualisation(vector <vector<double>> table, vector<vector<double>> result)
@@ -104,7 +134,7 @@ int Visualisation(vector <vector<double>> table, vector<vector<double>> result)
 
 	glfwMakeContextCurrent(window1);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1366, 768);
 
 	float sx = 2.0 / (table[table.size() - 1][0] - table[0][0]);
 	float dx = (table[table.size() - 1][0] + table[0][0])*0.5;
@@ -124,7 +154,7 @@ int Visualisation(vector <vector<double>> table, vector<vector<double>> result)
 			glfwMakeContextCurrent(window1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			drawXY();
-			drawGraph(table,result,sx,sy,dx,dy);
+			drawGraph(table, result);
 			glfwSwapBuffers(window1);
 			glfwPollEvents();
 	}
