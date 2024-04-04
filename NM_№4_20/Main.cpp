@@ -12,7 +12,7 @@ using namespace std;
 void drawXY();
 void drawGraph(vector<vector<double>> table, vector<vector<double>> result , double rangeX, double rangeY, float sx, float sy, float dx, float dy);
 int Visualisation(vector<vector<double>> table, vector<vector<double>> result);
-vector<vector<double>> normalize(vector<vector<double>> points);
+void normalize(vector<vector<double>> &points,vector<vector<double>> &graph);
 double function(double x);
 void print_table(vector<vector<double>> table)
 {
@@ -51,15 +51,14 @@ int main() {
 
 		vector<vector<double>> result = (new LeastSquareMethod)->Calculation(table, 1);
 
-		table = normalize(table);
-		result = normalize(result);
+		normalize(table, result);
 
-		print_table(table);
+		//print_table(table);
 	
 	return Visualisation(table,result);
 }
 
-vector<vector<double>> normalize(vector<vector<double>> points) {
+void normalize(vector<vector<double>> &points, vector<vector<double>> &graph) {
 	
 	double maxX = abs(points[0][0]), maxY = abs(points[0][1]);
 	for (int i = 0; i < points.size(); i++)
@@ -69,6 +68,8 @@ vector<vector<double>> normalize(vector<vector<double>> points) {
 		if (abs(points[i][1])>maxY)
 			maxY = abs(points[i][1]);
 	}
+	maxY ++;
+	maxX ++;
 	double scaleX = 1 / maxX;
 	double scaleY = 1 / maxY;
 
@@ -76,9 +77,10 @@ vector<vector<double>> normalize(vector<vector<double>> points) {
 	{
 		points[i][0] *= scaleX;
 		points[i][1] *= scaleY;
+		graph[i][0] *= scaleX;
+		graph[i][1] *= scaleY;
 	}
 
-	return points;
 }
 
 void drawXY()
@@ -113,7 +115,7 @@ void drawGraph(vector<vector<double>> table, vector<vector<double>> result) {
 
 double function(double x)
 {
-	return sin(x);
+	return sin(x)+3;
 }
 
 int Visualisation(vector <vector<double>> table, vector<vector<double>> result)
