@@ -54,12 +54,14 @@ double LeastSquareMethod::generate_b(vector<vector<double>> table, int k)
 double LeastSquareMethod::generate_y(vector<double> a, double x)
 {
 	double y = a[0];
+	cout << a[0] << ' ';
 	for (int i = 1; i < a.size(); i++)
 	{
 		double x_temp = x;
-		for (int j = 1; j < i; i++)
+		for (int j = 1; j < i; j++)
 			x_temp *= x;
 		y += a[i] * x_temp;
+		cout << a[i] << ' ';
 	}
 	return y;
 }

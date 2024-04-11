@@ -46,16 +46,17 @@ int main() {
 			temp.push_back(start);
 			temp.push_back(function(start));
 			table.push_back(temp);
-			start += step;
+			start *= step;
 		}
 
-		vector<vector<double>> result = (new LeastSquareMethod)->Calculation(table, 1);
+		vector<vector<double>> result = (new LeastSquareMethod)->Calculation(table, 2);
+
 
 		normalize(table, result);
 
 		//print_table(table);
 	
-	return Visualisation(table,result);
+		return Visualisation(table, result);
 }
 
 void normalize(vector<vector<double>> &points, vector<vector<double>> &graph) {
@@ -115,7 +116,7 @@ void drawGraph(vector<vector<double>> table, vector<vector<double>> result) {
 
 double function(double x)
 {
-	return sin(x)+3;
+	return sin(x);
 }
 
 int Visualisation(vector <vector<double>> table, vector<vector<double>> result)
